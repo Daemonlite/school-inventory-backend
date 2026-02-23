@@ -12,10 +12,10 @@ import {
     deleteProductCategory
 } from "../controllers/ProductCategoryController.js";
 
-router.post("/create", verifyToken, createProductCategory);
-router.get("/categories", verifyToken, getAllProductCategories);
-router.get("/category/:id", verifyToken, getProductCategoryById);
-router.put("/update/:id", verifyToken, updateProductCategory);
-router.delete("/delete/:id", verifyToken, deleteProductCategory);
+router.post("/", verifyToken, createProductCategory);
+router.get("/", verifyToken, getAllProductCategories);
+router.get("/:id", verifyToken, getProductCategoryById);
+router.put("/:id", verifyToken, updateProductCategory);
+router.delete("/:id", verifyToken, deleteProductCategory);
 
 export default router;

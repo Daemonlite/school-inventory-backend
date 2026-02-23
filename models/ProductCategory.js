@@ -9,6 +9,8 @@ const ProductCategorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+}, {
+    timestamps: true,
 });
 
 const ProductCategory = mongoose.model("ProductCategory", ProductCategorySchema);

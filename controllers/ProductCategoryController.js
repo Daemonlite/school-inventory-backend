@@ -1,13 +1,51 @@
 import ProductCategory from "../models/ProductCategory.js";
 
 export const getAllProductCategories = async (req, res) => {
-    try {
-        const productCategories = await ProductCategory.find();
-        res.status(200).json(productCategories);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
-    }
+  try {
+    const categories = await ProductCategory.aggregate([
+      {
+        $lookup: {
+          from: "products", // must match your MongoDB collection name
+          let: { categoryId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$category", "$$categoryId"] }
+              }
+            },
+            {
+              $group: {
+                _id: null,
+                total_products: { $sum: 1 },
+                total_value: { $sum: "$price" } // change if you use quantity * price
+              }
+            }
+          ],
+          as: "stats"
+        }
+      },
+      {
+        $addFields: {
+          productCount: {
+            $ifNull: [{ $arrayElemAt: ["$stats.total_products", 0] }, 0]
+          },
+          totalValue: {
+            $ifNull: [{ $arrayElemAt: ["$stats.total_value", 0] }, 0]
+          }
+        }
+      },
+      {
+        $project: {
+          stats: 0 // remove stats array from response
+        }
+      }
+    ]);
+
+    res.status(200).json(categories);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 export const getProductCategoryById = async (req, res) => {
