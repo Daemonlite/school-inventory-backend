@@ -3,7 +3,10 @@ import ProductCategory from "../models/ProductCategory.js";
 
 export const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate("category");
+        const products = await Product.find()
+            .populate("category")
+            .sort({ createdAt: -1 }); 
+
         res.status(200).json(products);
     } catch (error) {
         console.error(error);
@@ -26,12 +29,19 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, category } = req.body;
+        const { name, description, category,price,quantity } = req.body;
+
+        console.log(req.body)
+
+        if (!name || !description || !category || !price || !quantity) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
         const productCategory = await ProductCategory.findById(category);
         if (!productCategory) {
             return res.status(400).json({ message: "Invalid product category" });
         }
-        const product = new Product({ name, description, category: productCategory });
+        const product = new Product({ name, description, category: productCategory,price,quantity });
         await product.save();
         res.status(201).json(product);
     } catch (error) {
@@ -42,12 +52,12 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     try {
-        const { name, description, category } = req.body;
+        const { name, description, category,price,quantity } = req.body;
         const productCategory = await ProductCategory.findById(category);
         if (!productCategory) {
             return res.status(400).json({ message: "Invalid product category" });
         }
-        const product = await Product.findByIdAndUpdate(req.params.id, { name, description, category: productCategory }, { new: true });
+        const product = await Product.findByIdAndUpdate(req.params.id, { name, description, category: productCategory,price,quantity }, { new: true });
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
