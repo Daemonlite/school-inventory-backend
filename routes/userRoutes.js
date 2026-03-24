@@ -1,7 +1,9 @@
 import {
     register,
     login,
-    getAllUsers
+    getAllUsers,
+    updateUser,
+    deleteUser
 } from "../controllers/userController.js";
 import verifyToken from "../middlewares/verify.js";
 
@@ -11,6 +13,8 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
-router.get("/users",verifyToken, getAllUsers);
+router.get("/",verifyToken, getAllUsers);
+router.put("/:id", verifyToken, updateUser);
+router.delete("/:id", verifyToken, deleteUser);
 
 export default router;
