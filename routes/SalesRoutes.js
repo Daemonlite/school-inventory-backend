@@ -14,11 +14,11 @@ import {
 } from "../controllers/SalesController.js"
 
 
-router.post("/create", verifyToken, createSales);
-router.get("/sales", verifyToken, getAllSales);
-router.get("/sales/:id", verifyToken, getSalesById);
-router.get("/sales/user/:id", verifyToken, getSalesByUserId);
-router.put("/update/:id", verifyToken, updateSales);
-router.delete("/delete/:id", verifyToken, deleteSales);
+router.post("/", verifyToken, createSales);
+router.get("/", verifyToken, getAllSales);
+router.get("/:id", verifyToken, getSalesById);
+router.get("/user/:id", verifyToken, getSalesByUserId);
+router.put("/:id", verifyToken, updateSales);
+router.delete("/:id", verifyToken, deleteSales);
 
 export default router

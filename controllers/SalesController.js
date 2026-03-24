@@ -5,7 +5,7 @@ import User from "../models/Users.js";
 
 export const getAllSales = async (req, res) => {
     try {
-        const sales = await Sales.find().populate("product").populate("salesPerson");
+        const sales = await Sales.find().populate("product").populate("salesPerson").sort({ createdAt: -1 }); ;
         res.status(200).json(sales);
     } catch (error) {
         console.error(error);
@@ -43,10 +43,14 @@ export const getSalesByUserId = async (req, res) => {
 
 export const createSales = async (req, res) => {
     try {
-        const { product, quantity } = req.body;
+        const { product, quantity,customer,paymentMethod } = req.body;
         
         if (!product || !quantity) {
             return res.status(400).json({ message: "All fields are required" });
+        }
+
+        if (quantity <= 0) {
+            return res.status(400).json({ message: "Quantity must be greater than 0" });
         }
         
         const existingProduct = await Product.findById(product);
@@ -69,7 +73,11 @@ export const createSales = async (req, res) => {
         await existingProduct.save();
 
         
-        const sales = new Sales({ product, quantity, salesPerson });
+        const buyer_data = `${customer.name} - ${customer.email}`
+        const total = existingProduct.price * quantity
+
+        
+        const sales = new Sales({ product, quantity, salesPerson,customer:buyer_data,total,paymentMethod });
         await sales.save();
         res.status(201).json(sales);
     } catch (error) {

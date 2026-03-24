@@ -12,16 +12,30 @@ const SalesSchema = new mongoose.Schema({
     },
     saleDate: {
         type: Date,
-        required: true,
+        required: false,
+        default: Date.now
     },
     customer:{
         type: String,
+        required: true,
+    },
+    total:{
+        type: Number,
         required: true,
     },
     salesPerson: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
+    },
+    status: {
+        type: String,
+        enum: ["pending", "completed"],
+        default: "pending",
+    },
+    paymentMethod: {
+        type: String,
+        default: "cash",
     },
 }, {
     timestamps: true,
