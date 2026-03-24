@@ -10,15 +10,18 @@ import {
     getSalesById,
     getSalesByUserId,
     updateSales,
-    deleteSales
+    deleteSales,
+    salesDashboard
 } from "../controllers/SalesController.js"
 
 
 router.post("/", verifyToken, createSales);
 router.get("/", verifyToken, getAllSales);
-router.get("/:id", verifyToken, getSalesById);
+router.get("/dashboard", verifyToken, salesDashboard);
 router.get("/user/:id", verifyToken, getSalesByUserId);
 router.put("/:id", verifyToken, updateSales);
 router.delete("/:id", verifyToken, deleteSales);
+router.get("/:id", verifyToken, getSalesById);
+
 
 export default router
