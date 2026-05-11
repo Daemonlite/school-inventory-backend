@@ -29,19 +29,39 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, category,price,quantity } = req.body;
+        const { name, description, category,price,quantity,minQuantity,expirationDate } = req.body;
 
         console.log(req.body)
 
-        if (!name || !description || !category || !price || !quantity) {
-            return res.status(400).json({ message: "All fields are required" });
+        if (!name) {
+            return res.status(400).json({ message: "Name is required" });
+        }
+
+        if (!description) {
+            return res.status(400).json({ message: "Description is required" });
+        }
+
+        if (!category) {
+            return res.status(400).json({ message: "Category is required" });
+        }
+
+        if (!price) {
+            return res.status(400).json({ message: "Price is required" });
+        }
+
+        if (!quantity) {
+            return res.status(400).json({ message: "Quantity is required" });
+        }
+
+        if(!minQuantity){
+            return res.status(400).json({ message: "Minimum Quantity required" });
         }
 
         const productCategory = await ProductCategory.findById(category);
         if (!productCategory) {
             return res.status(400).json({ message: "Invalid product category" });
         }
-        const product = new Product({ name, description, category: productCategory,price,quantity });
+        const product = new Product({ name, description, category: productCategory,price,quantity,minQuantity,expirationDate });
         await product.save();
         res.status(201).json(product);
     } catch (error) {
@@ -52,12 +72,12 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     try {
-        const { name, description, category,price,quantity } = req.body;
+        const { name, description, category,price,quantity,minQuantity,expirationDate } = req.body;
         const productCategory = await ProductCategory.findById(category);
         if (!productCategory) {
             return res.status(400).json({ message: "Invalid product category" });
         }
-        const product = await Product.findByIdAndUpdate(req.params.id, { name, description, category: productCategory,price,quantity }, { new: true });
+        const product = await Product.findByIdAndUpdate(req.params.id, { name, description, category: productCategory,price,quantity,minQuantity,expirationDate }, { new: true });
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }

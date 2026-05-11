@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes.js";
 import ProductCategoryRoutes from "./routes/ProductCategoryRoutes.js";
 import ProductRoutes from "./routes/ProductRoutes.js";
 import SalesRoutes from "./routes/SalesRoutes.js";
+import "./worker.js";
 
 const app = express();
 
