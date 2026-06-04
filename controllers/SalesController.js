@@ -121,6 +121,15 @@ export const deleteSales = async (req, res) => {
     if (!sales) {
       return res.status(404).json({ message: "Sales not found" });
     }
+
+
+    const prod = await Product.findById(sales.product);
+    if (!prod) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    prod.quantity += sales.quantity;
+    await prod.save();
     res.status(200).json({ message: "Sales deleted successfully" });
   } catch (error) {
     console.error(error);
